@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gratta e Vinci dell'Amore ❤️</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+            /* Sfondo blu Navy protettivo se l'immagine non si carica */
+            background-color: #000033; 
+        }
+
+        /* Contenitore dello sfondo sfocato corretto per GitHub Pages e Mobile */
+        .background-blur {
+            position: fixed;
+            top: -5%;
+            left: -5%;
+            width: 110%;
+            height: 110%;
+            background-image: url('./sfondo.jpeg'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            filter: blur(8px); 
+            z-index: -1;
+        }
+
+        .container { 
+            max-width: 420px; 
+            width: 90%;
+            background: rgba(255, 255, 255, 0.93); 
+            padding: 25px; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4); 
+            text-align: center;
+            box-sizing: border-box;
+            z-index: 10;
+        }
+
+        h1 { 
+            color: #000080; 
+            font-size: 24px; 
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #000080;
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .counter {
+            font-size: 14px;
+            color: #000080;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .scratch-card { 
+            position: relative; 
+            width: 300px; 
+            height: 150px; 
+            margin: 0 auto 20px auto; 
+            border-radius: 12px; 
+            overflow: hidden; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            background: #fff;
+        }
+
+        .secret-content { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            font-weight: bold; 
+            font-size: 18px; 
+            color: #000080; 
+            text-align: center; 
+            padding: 15px; 
+            box-sizing: border-box; 
+            background: #f4f6f9;
+        }
+
+        canvas { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            cursor: pointer; 
+            touch-action: none;
+        }
+
+        button {
+            background-color: #000080;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            display: none;
+            margin: 0 auto;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background-color: #000055;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background-blur"></div>
+
+    <div class="container">
+        <h1>Gratta e vedrai cosa ti aspetterà more</h1>
+        <p class="subtitle">Potresti vincere un milione di euro, Gratta!</p>
+        
+        <div class="counter" id="ticketCounter">Biglietto: 1 di 14</div>
+
+        <div class="scratch-card">
+            <div class="secret-content" id="secretText"></div>
+            <canvas id="scratchCanvas" width="300" height="150"></canvas>
+        </div>
+
+        <button id="nextBtn" onclick="nextTicket()">Prendi un altro biglietto 🎫</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('scratchCanvas');
+        const ctx = canvas.getContext('2d');
+        const secretText = document.getElementById('secretText');
+        const nextBtn = document.getElementById('nextBtn');
+        const ticketCounter = document.getElementById('ticketCounter');
+
+        let currentTicket = 1;
+        const totalTickets = 14;
+        const luckyTicket = 12;
+
+        let isDrawing = false;
+        let scratchCleared = false;
+
+        function initScratchCard() {
+            scratchCleared = false;
+            nextBtn.style.display = 'none';
+            ticketCounter.innerText = `Biglietto: ${currentTicket} di ${totalTickets}`;
+
+            if (currentTicket === luckyTicket) {
+                secretText.innerHTML = "🎉 HAI VINTO!<br>Un milione di Bacini, Coccole e Morsettini ❤️";
+            } else {
+                secretText.innerText = "Peccato hai perso, ritenta! 😢";
+            }
+
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const gradient = ctx.createRadialGradient(
+                canvas.width / 2, canvas.height / 2, 10,
+                canvas.width / 2, canvas.height / 2, canvas.width / 1.4
+            );
+            gradient.addColorStop(0, '#ffe066'); 
+            gradient.addColorStop(0.5, '#d4af37'); 
+            gradient.addColorStop(1, '#aa8010'); 
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+            for (let i = 0; i < 400; i++) {
+                let x = Math.random() * canvas.width;
+                let y = Math.random() * canvas.height;
+                ctx.fillRect(x, y, 2, 2);
+            }
+
+            ctx.fillStyle = '#503a0a'; 
+            ctx.font = 'bold 14px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('✨ GRATTA CON IL DITO O MOUSE ✨', canvas.width / 2, canvas.height / 2 + 5);
+        }
+
+        function scratch(e) {
+            if (!isDrawing) return;
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+            if (!clientX || !clientY) return;
+
+            const x = clientX - rect.left;
+            const y = clientY - rect.top;
+            
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.beginPath();
+            ctx.arc(x, y, 24, 0, Math.PI * 2); 
+            ctx.fill();
+
+            if (!scratchCleared) {
+                scratchCleared = true;
+                if (currentTicket < totalTickets && currentTicket !== luckyTicket) {
+                    setTimeout(() => { nextBtn.style.display = 'block'; }, 600);
+                }
+            }
+        }
+
+        function nextTicket() {
+            if (currentTicket < totalTickets) {
+                currentTicket++;
+                initScratchCard();
+            }
+        }
+
+        // Tutti gli eventi Mouse e Touch completi e ripristinati
+        canvas.addEventListener('mousedown', () => isDrawing = true);
+        canvas.addEventListener('mouseup', () => isDrawing = false);
+        canvas.addEventListener('mouseleave', () => isDrawing = false);
+        canvas.addEventListener('mousemove', scratch);
+        canvas.addEventListener('touchstart', (e) => { isDrawing = true; scratch(e); });
+        canvas.addEventListener('touchend', () => isDrawing = false);
+        canvas.addEventListener('touchmove', (e) => { e.preventDefault(); scratch(e); }, { passive: false });
+
+        window.onload = initScratchCard;
+    </script>
+</body>
+</html>
